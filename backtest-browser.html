@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kairos — Backtest</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+[data-theme="dark"]{--bg:#0d1117;--surface:#161b22;--surface2:#1c2333;--border:#30363d;--text:#e6edf3;--text2:#8b949e;--text3:#6e7681;--pos:#66bb6a;--neg:#ef5350;--warn:#ffb300;--accent:#58a6ff}
+[data-theme="light"]{--bg:#f6f8fa;--surface:#fff;--surface2:#f6f8fa;--border:#d0d7de;--text:#1f2328;--text2:#656d76;--text3:#9198a1;--pos:#2da44e;--neg:#cf222e;--warn:#9a6700;--accent:#0969da}
+body{background:var(--bg);color:var(--text);font:13px/1.6 system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:20px}
+h2{font-size:15px;font-weight:600;margin-bottom:12px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{background:var(--surface2);border-radius:8px;padding:12px}
+.card-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.card-val{font-size:22px;font-weight:700}
+.pos{color:var(--pos)} .neg{color:var(--neg)} .warn{color:var(--warn)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:11px}
+.bar-lbl{width:90px;text-align:right;color:var(--text3);flex-shrink:0}
+.bar-track{flex:1;height:16px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:3px}
+.bar-inside{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:600}
+.bar-count{width:44px;color:var(--text3);text-align:right;font-size:10px}
+.insight{padding:8px 12px;border-radius:6px;font-size:11px;line-height:1.6;margin-bottom:8px}
+.insight.red{border-left:3px solid var(--neg);background:rgba(239,83,80,.07)}
+.insight.green{border-left:3px solid var(--pos);background:rgba(102,187,106,.07)}
+.insight.amber{border-left:3px solid var(--warn);background:rgba(255,179,0,.07)}
+.status{font-size:12px;color:var(--text2);padding:12px;text-align:center}
+.progress{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;margin:8px 0}
+.progress-bar{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{padding:7px 8px;text-align:left;font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04)}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600}
+.b-valid{background:rgba(102,187,106,.2);color:var(--pos)}
+.b-watch{background:rgba(255,179,0,.2);color:var(--warn)}
+.b-skip{background:rgba(239,83,80,.2);color:var(--neg)}
+.dots{display:flex;gap:2px}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.1)}
+.dot.on{background:var(--pos)}
+select{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:11px}
+.chart-wrap{position:relative;width:100%}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+    <div id="run-status" class="status" style="flex:1;text-align:left;padding:0">
+      Click "Run Backtest" to analyse your trades against historical signals.
+    </div>
+    <button onclick="runBacktest()" id="run-btn"
+      style="background:var(--accent);color:#fff;border:none;border-radius:8px;
+      padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer">
+      Run Backtest
+    </button>
+    <select id="filter-label" onchange="renderTable()">
+      <option value="">All signals</option>
+      <option>VALID</option><option>WATCH</option><option>SKIP</option>
+    </select>
+    <select id="filter-strat" onchange="renderTable()">
+      <option value="">All strategies</option>
+      <option>iron_condor</option><option>bps</option><option>bcs</option>
+    </select>
+  </div>
+
+  <div class="progress"><div class="progress-bar" id="prog" style="width:0%"></div></div>
+
+  <!-- Summary cards -->
+  <div class="cards" id="summary-cards" style="display:none">
+    <div class="card"><div class="card-lbl">Trades scored</div><div class="card-val" id="c-total">–</div></div>
+    <div class="card"><div class="card-lbl">Win rate</div><div class="card-val pos" id="c-wr">–</div></div>
+    <div class="card"><div class="card-lbl">Total P&L</div><div class="card-val" id="c-pnl">–</div></div>
+    <div class="card"><div class="card-lbl">IVR coverage</div><div class="card-val" id="c-ivr">–</div></div>
+  </div>
+
+  <div id="results" style="display:none">
+
+    <div class="grid2">
+      <!-- Signal quality -->
+      <div class="panel">
+        <h2>Signal quality vs outcome</h2>
+        <div id="signal-bars"></div>
+        <div class="insight red" id="signal-insight"></div>
+      </div>
+
+      <!-- VIX level -->
+      <div class="panel">
+        <h2>Win rate by VIX level</h2>
+        <div id="vix-bars"></div>
+        <div class="insight green" id="vix-insight"></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <!-- Strategy -->
+      <div class="panel">
+        <h2>Strategy breakdown</h2>
+        <div id="strat-bars"></div>
+      </div>
+
+      <!-- Monthly P&L chart -->
+      <div class="panel">
+        <h2>Monthly P&L</h2>
+        <div class="chart-wrap" style="height:160px">
+          <canvas id="chart-monthly"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insights -->
+    <div class="panel">
+      <h2>Key findings</h2>
+      <div id="findings"></div>
+    </div>
+
+    <!-- Trade log -->
+    <div class="panel" style="padding:0">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border)">
+        <h2 style="margin:0;display:inline">Trade log</h2>
+        <span id="trade-count" style="font-size:11px;color:var(--text3);margin-left:8px"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th><th>Strategy</th><th>Signal</th><th>Score</th>
+              <th>VIX</th><th>IVR</th><th>RSI</th><th>Trend</th><th>P&L</th><th>W/L</th>
+            </tr>
+          </thead>
+          <tbody id="trade-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Indicators (same as backtest.py ported to JS) ──────────────────────────
+
+function calcATR(bars, n=14) {
+  if (bars.length < n+1) return null;
+  const trs = [];
+  for (let i=1; i<bars.length; i++) {
+    const {h,l,c:pc} = bars[i-1];
+    const {h:ch,l:cl} = bars[i];
+    trs.push(Math.max(ch-cl, Math.abs(ch-pc), Math.abs(cl-pc)));
+  }
+  let atr = trs.slice(0,n).reduce((a,b)=>a+b,0)/n;
+  for (let i=n; i<trs.length; i++) atr = (atr*(n-1)+trs[i])/n;
+  return +atr.toFixed(2);
+}
+
+function calcRSI(bars, n=14) {
+  if (bars.length < n+2) return null;
+  const c = bars.map(b=>b.c);
+  let g=0,l=0;
+  for (let i=1; i<=n; i++) { const d=c[i]-c[i-1]; d>0?g+=d:l-=d; }
+  let ag=g/n, al=l/n;
+  for (let i=n+1; i<c.length; i++) {
+    const d=c[i]-c[i-1];
+    ag=(ag*(n-1)+(d>0?d:0))/n;
+    al=(al*(n-1)+(d<0?-d:0))/n;
+  }
+  return +(100-100/(1+(al===0?100:ag/al))).toFixed(1);
+}
+
+function calcStoch(bars, k=14, d=3) {
+  if (bars.length < k+d) return null;
+  const ks=[];
+  for (let i=k-1; i<bars.length; i++) {
+    const sl=bars.slice(i-k+1,i+1);
+    const hi=Math.max(...sl.map(b=>b.h)), lo=Math.min(...sl.map(b=>b.l));
+    ks.push(hi===lo?50:(bars[i].c-lo)/(hi-lo)*100);
+  }
+  return { k: +ks[ks.length-1].toFixed(1), d: +(ks.slice(-d).reduce((a,b)=>a+b,0)/d).toFixed(1) };
+}
+
+function calcBB(bars, n=20) {
+  if (bars.length < n) return null;
+  const c=bars.slice(-n).map(b=>b.c);
+  const mu=c.reduce((a,b)=>a+b,0)/n;
+  const sd=Math.sqrt(c.reduce((a,b)=>a+(b-mu)**2,0)/n);
+  const last=c[c.length-1];
+  return { pctB: +(sd===0?50:(last-(mu-2*sd))/(4*sd)*100).toFixed(1) };
+}
+
+function calcIVR(vixBars, cur) {
+  if (vixBars.length < 20) return null;
+  const c=vixBars.map(b=>b.c);
+  const hi=Math.max(...c), lo=Math.min(...c);
+  return hi===lo?50:Math.round((cur-lo)/(hi-lo)*100);
+}
+
+function calc200DMA(bars, cur) {
+  if (bars.length < 200) return null;
+  const last=bars.slice(-200).map(b=>b.c);
+  const dma=last.reduce((a,b)=>a+b,0)/last.length;
+  return { bullish: cur>dma };
+}
+
+// ── Score one trade ─────────────────────────────────────────────────────────
+function scoreOne(trade, spxIdx, vixIdx) {
+  const date = trade.date;
+  const spxRow = spxIdx[date] || findPrior(spxIdx, date);
+  const vixRow = vixIdx[date] || findPrior(vixIdx, date);
+  if (!spxRow || !vixRow) return null;
+
+  const { spxBars, vixBars } = spxRow;
+  const vix = vixRow.c;
+  const spx = spxRow.c;
+
+  const rsi    = calcRSI(spxBars);
+  const stoch  = calcStoch(spxBars);
+  const bb     = calcBB(spxBars);
+  const ivr    = calcIVR(vixBars, vix);
+  const trend  = calc200DMA(spxBars, spx);
+
+  const strat  = trade.strategy;
+  const dir    = strat === 'bps' ? 'bull' : strat === 'bcs' ? 'bear' : 'neutral';
+
+  let score = 0;
+  if (ivr !== null && ivr >= 30) score++;
+  const vixOk = dir==='bull' ? vix<25 : dir==='bear' ? vix<35 : vix<25;
+  if (vixOk) score++;
+  const trOk = dir==='bull' ? trend?.bullish===true : dir==='bear' ? trend?.bullish===false : true;
+  if (trOk) score++;
+  if (rsi !== null && (dir==='bull'?rsi<40:dir==='bear'?rsi>60:true)) score++;
+  if (stoch && (dir==='bull'?stoch.k<25:dir==='bear'?stoch.k>75:true)) score++;
+  if (bb && (dir==='bull'?bb.pctB<30:dir==='bear'?bb.pctB>70:true)) score++;
+
+  const label = dir==='neutral' ? (score>=3?'VALID':score>=2?'WATCH':'SKIP')
+                                 : (score>=4?'VALID':score>=2?'WATCH':'SKIP');
+
+  const vixBucket = vix<15?'VIX <15':vix<20?'VIX 15-20':vix<25?'VIX 20-25':vix<30?'VIX 25-30':'VIX ≥30';
+
+  return {
+    ...trade,
+    score, label,
+    vix: +vix.toFixed(2),
+    ivr,
+    rsi,
+    trend: trend?.bullish ? 'bull' : 'bear',
+    vix_bucket: vixBucket,
+  };
+}
+
+function findPrior(idx, date) {
+  const keys = Object.keys(idx).sort();
+  const prior = keys.filter(k=>k<=date);
+  return prior.length ? idx[prior[prior.length-1]] : null;
+}
+
+// ── Main backtest runner ─────────────────────────────────────────────────────
+let _scored = [];
+let _monthChart = null;
+
+async function runBacktest() {
+  const btn = document.getElementById('run-btn');
+  btn.disabled = true; btn.textContent = 'Running…';
+  setProgress(5, 'Loading trade data…');
+
+  try {
+    // 1. Load data.json
+    const dRes = await fetch('data.json?t='+Date.now());
+    if (!dRes.ok) throw new Error('data.json not found');
+    const data = await dRes.json();
+    const trades = (data.trades || []).filter(t =>
+      t.asset_type === 'OPT' && parseFloat(t.realized_pnl||0) !== 0
+    );
+    if (!trades.length) throw new Error('No closed options trades found');
+    setProgress(15, `Found ${trades.length} trades. Fetching market history…`);
+
+    // 2. Fetch SPX + VIX history
+    const [spxRes, vixRes] = await Promise.all([
+      fetch('/api/history?symbol=SPX&range=2y'),
+      fetch('/api/history?symbol=VIX&range=2y'),
+    ]);
+    const spxData = await spxRes.json();
+    const vixData = await vixRes.json();
+    if (!spxData.bars?.length) throw new Error('Failed to fetch SPX history');
+    setProgress(50, 'Building indicator index…');
+
+    // 3. Build rolling indicator index keyed by date
+    const spxBars = spxData.bars;
+    const vixBars = vixData.bars;
+    const vixByDate = {};
+    vixBars.forEach(b => vixByDate[b.date] = b);
+
+    const spxIdx = {};
+    for (let i = 200; i < spxBars.length; i++) {
+      const date = spxBars[i].date;
+      spxIdx[date] = {
+        c:       spxBars[i].c,
+        spxBars: spxBars.slice(0, i+1),
+        vixBars: vixBars.slice(0, vixBars.findIndex(b=>b.date>=date)+1 || vixBars.length),
+      };
+    }
+    const vixIdx = {};
+    vixBars.forEach(b => vixIdx[b.date] = b);
+
+    setProgress(70, 'Scoring trades…');
+
+    // 4. Score each trade
+    _scored = [];
+    for (const t of trades) {
+      const s = scoreOne(t, spxIdx, vixIdx);
+      if (s) _scored.push(s);
+    }
+
+    setProgress(90, 'Rendering results…');
+    renderResults();
+    setProgress(100, `✓ ${_scored.length} trades scored`);
+    document.getElementById('summary-cards').style.display = 'grid';
+    document.getElementById('results').style.display = 'block';
+
+  } catch(e) {
+    setProgress(0, '⚠ ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Run Backtest';
+  }
+}
+
+function setProgress(pct, msg) {
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('run-status').textContent = msg;
+}
+
+// ── Render ───────────────────────────────────────────────────────────────────
+function agg(arr) {
+  if (!arr.length) return null;
+  const wins = arr.filter(t=>t.win);
+  const pnls = arr.map(t=>t.pnl);
+  return {
+    count: arr.length, wins: wins.length,
+    wr: +(wins.length/arr.length*100).toFixed(1),
+    total: +pnls.reduce((a,b)=>a+b,0).toFixed(2),
+    avg:   +(pnls.reduce((a,b)=>a+b,0)/arr.length).toFixed(2),
+    maxWin:  +Math.max(...pnls).toFixed(2),
+    maxLoss: +Math.min(...pnls).toFixed(2),
+  };
+}
+
+function barRow(label, wr, count, maxWr=100) {
+  const col = wr>=80?'var(--pos)':wr>=65?'var(--warn)':'var(--neg)';
+  const w   = (wr/maxWr*100).toFixed(1);
+  return `<div class="bar-row">
+    <div class="bar-lbl">${label}</div>
+    <div class="bar-track">
+      <div class="bar-fill" style="width:${w}%;background:${col}"></div>
+      <div class="bar-inside" style="color:${col}">${wr}%</div>
+    </div>
+    <div class="bar-count">${count}t</div>
+  </div>`;
+}
+
+function renderResults() {
+  const overall = agg(_scored);
+
+  // Summary cards
+  document.getElementById('c-total').textContent = overall.count;
+  const wrEl = document.getElementById('c-wr');
+  wrEl.textContent = overall.wr + '%';
+  wrEl.className = 'card-val ' + (overall.wr>=70?'pos':'warn');
+  const pnlEl = document.getElementById('c-pnl');
+  pnlEl.textContent = '$' + overall.total.toLocaleString();
+  pnlEl.className = 'card-val ' + (overall.total>=0?'pos':'neg');
+  const ivrCoverage = _scored.filter(t=>t.ivr!==null).length;
+  document.getElementById('c-ivr').textContent = Math.round(ivrCoverage/_scored.length*100) + '%';
+
+  // Signal bars
+  const byLabel = {};
+  _scored.forEach(t=>{ byLabel[t.label]=byLabel[t.label]||[]; byLabel[t.label].push(t); });
+  document.getElementById('signal-bars').innerHTML =
+    ['VALID','WATCH','SKIP'].filter(l=>byLabel[l]).map(l => {
+      const a = agg(byLabel[l]);
+      return barRow(l, a.wr, a.count);
+    }).join('');
+
+  // Signal insight
+  const validWR = agg(byLabel['VALID'])?.wr;
+  const skipWR  = agg(byLabel['SKIP'])?.wr;
+  const sigInsight = document.getElementById('signal-insight');
+  if (validWR !== undefined && skipWR !== undefined) {
+    const diff = +(validWR - overall.wr).toFixed(1);
+    sigInsight.className = `insight ${diff >= 3 ? 'green' : diff >= 0 ? 'amber' : 'red'}`;
+    sigInsight.innerHTML = `<strong>VALID signal ${diff >= 0 ? 'outperforms' : 'underperforms'} baseline by ${Math.abs(diff)} pts.</strong>
+      ${Math.abs(diff) < 3 ? ' Confluence score has limited predictive value yet — IVR needs 12 months of history.' : ' Signal is showing predictive power.'}`;
+  }
+
+  // VIX bars
+  const byVix = {};
+  _scored.forEach(t=>{ byVix[t.vix_bucket]=byVix[t.vix_bucket]||[]; byVix[t.vix_bucket].push(t); });
+  const vixOrder = ['VIX <15','VIX 15-20','VIX 20-25','VIX 25-30','VIX ≥30'];
+  document.getElementById('vix-bars').innerHTML =
+    vixOrder.filter(k=>byVix[k]).map(k => {
+      const a = agg(byVix[k]);
+      return barRow(k, a.wr, a.count);
+    }).join('');
+
+  // VIX insight
+  const bestVix = vixOrder.filter(k=>byVix[k]).map(k=>({k, wr:agg(byVix[k]).wr})).sort((a,b)=>b.wr-a.wr)[0];
+  const vixIns  = document.getElementById('vix-insight');
+  if (bestVix) {
+    vixIns.innerHTML = `<strong>Best conditions: ${bestVix.k}</strong> (${bestVix.wr}% WR). ${bestVix.wr >= 85 ? 'VIX level is a strong predictor.' : 'Moderate VIX signal.'}`;
+  }
+
+  // Strategy bars
+  const byStrat = {};
+  _scored.forEach(t=>{ byStrat[t.strategy]=byStrat[t.strategy]||[]; byStrat[t.strategy].push(t); });
+  const stratLabels = {iron_condor:'IC',bps:'BPS',bcs:'BCS'};
+  document.getElementById('strat-bars').innerHTML =
+    ['iron_condor','bps','bcs'].filter(k=>byStrat[k]).map(k => {
+      const a = agg(byStrat[k]);
+      return barRow(stratLabels[k]||k, a.wr, a.count) +
+        `<div style="font-size:10px;color:var(--text3);padding:2px 0 6px 98px">Avg $${a.avg} · Max loss $${Math.abs(a.maxLoss).toFixed(0)}</div>`;
+    }).join('');
+
+  // Monthly chart
+  const byMonth = {};
+  _scored.forEach(t=>{ const m=t.date.slice(0,7); byMonth[m]=byMonth[m]||[]; byMonth[m].push(t); });
+  const months = Object.keys(byMonth).sort();
+  if (_monthChart) _monthChart.destroy();
+  _monthChart = new Chart(document.getElementById('chart-monthly'), {
+    type:'bar',
+    data:{
+      labels: months,
+      datasets:[{
+        data: months.map(m=>+byMonth[m].reduce((a,t)=>a+t.pnl,0).toFixed(2)),
+        backgroundColor: months.map(m=>byMonth[m].reduce((a,t)=>a+t.pnl,0)>=0?'rgba(102,187,106,.7)':'rgba(239,83,80,.7)'),
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:'#8b949e',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}},
+              y:{ticks:{color:'#8b949e',callback:v=>'$'+v},grid:{color:'rgba(255,255,255,.05)'}}}},
+  });
+
+  // Key findings
+  const icA  = agg(byStrat['iron_condor']);
+  const bpsA = agg(byStrat['bps']);
+  const bcsA = agg(byStrat['bcs']);
+  document.getElementById('findings').innerHTML = [
+    icA  ? `<div class="insight green"><strong>IC: ${icA.wr}% WR</strong> · avg $${icA.avg} · max loss $${Math.abs(icA.maxLoss).toFixed(0)}. ${icA.wr>=80?'Best strategy — use as primary.':''}</div>` : '',
+    bpsA ? `<div class="insight amber"><strong>BPS: ${bpsA.wr}% WR</strong> · avg $${bpsA.avg} · max loss $${Math.abs(bpsA.maxLoss).toFixed(0)}. Directional — higher risk.</div>` : '',
+    bcsA ? `<div class="insight amber"><strong>BCS: ${bcsA.wr}% WR</strong> · avg $${bcsA.avg} · max loss $${Math.abs(bcsA.maxLoss).toFixed(0)}. Directional — higher risk.</div>` : '',
+    `<div class="insight red"><strong>Note:</strong> Only ${_scored.length} trades over a short period. Statistical significance requires 200+ trades across multiple market regimes.</div>`,
+  ].join('');
+
+  renderTable();
+}
+
+function renderTable() {
+  const lf = document.getElementById('filter-label').value;
+  const sf = document.getElementById('filter-strat').value;
+  let rows = _scored.slice();
+  if (lf) rows = rows.filter(r=>r.label===lf);
+  if (sf) rows = rows.filter(r=>r.strategy===sf);
+  rows.sort((a,b)=>b.date.localeCompare(a.date));
+  document.getElementById('trade-count').textContent = `(${rows.length} trades)`;
+  const fmt = n => n==null?'—':n;
+  const pf  = n => n>0?'+$'+n.toFixed(2):'-$'+Math.abs(n).toFixed(2);
+  document.getElementById('trade-tbody').innerHTML = rows.slice(0,200).map(r => {
+    const dots = [1,2,3,4,5,6].map(i=>`<div class="dot${i<=r.score?' on':''}"></div>`).join('');
+    const lc = r.label==='VALID'?'b-valid':r.label==='WATCH'?'b-watch':'b-skip';
+    return `<tr>
+      <td>${r.date}</td>
+      <td style="text-transform:uppercase;font-weight:600;font-size:10px">${r.strategy}</td>
+      <td><span class="badge ${lc}">${r.label}</span></td>
+      <td><div class="dots" title="${r.score}/6">${dots}</div></td>
+      <td>${fmt(r.vix)}</td>
+      <td>${r.ivr!=null?r.ivr+'%':'—'}</td>
+      <td style="color:${r.rsi<40?'var(--pos)':r.rsi>60?'var(--neg)':'var(--text2)'}">${fmt(r.rsi)}</td>
+      <td style="color:${r.trend==='bull'?'var(--pos)':'var(--neg)'}">${r.trend==='bull'?'▲ bull':'▼ bear'}</td>
+      <td style="font-weight:600;color:${r.pnl>0?'var(--pos)':'var(--neg)'}">${pf(r.pnl)}</td>
+      <td style="color:${r.win?'var(--pos)':'var(--neg)'}">${r.win?'WIN':'LOSS'}</td>
+    </tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

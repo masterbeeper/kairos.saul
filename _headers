@@ -1,0 +1,16 @@
+# _headers
+# Cache control for GitHub Pages
+# Tells browsers not to cache HTML but cache assets
+
+# Never cache index.html — always fetch fresh
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+
+# Never cache data.json — always fetch fresh (updated by sync)
+/data.json
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Cache JS/CSS for 1 day (versioned with ?v= so updates always bust cache)
+/assets/*
+  Cache-Control: public, max-age=86400

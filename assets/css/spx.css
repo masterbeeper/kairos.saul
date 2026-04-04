@@ -1,0 +1,202 @@
+/* ── SPX Professional Options Engine ──────────────────────────────────────── */
+
+.spx-content { max-width: 1400px; margin: 0 auto; }
+
+/* Price cards */
+.price-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-sm);
+}
+@media(max-width:1100px){ .price-cards-grid{ grid-template-columns: repeat(3,1fr); } }
+@media(max-width:600px) { .price-cards-grid{ grid-template-columns: repeat(2,1fr); } }
+
+.price-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-md);
+  min-height: 80px;
+}
+.price-card.skeleton{ min-height:80px; animation:pulse 1.5s ease-in-out infinite; }
+.pc-label  { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; }
+.pc-price  { font-size:20px; font-weight:700; }
+.pc-change { font-size:10px; margin-top:2px; }
+.pc-sub    { font-size:10px; color:var(--text-muted); margin-top:2px; }
+
+/* Main 2-col layout */
+.spx-main-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: var(--sp-md);
+  align-items: start;
+}
+@media(max-width:900px){ .spx-main-grid{ grid-template-columns:1fr; } }
+
+/* Market bar */
+.market-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 12px;
+  margin-bottom: var(--sp-sm);
+}
+.mkt-dot { width:8px; height:8px; border-radius:50%; }
+.mkt-dot.open   { background:var(--pos); box-shadow:0 0 6px var(--pos); }
+.mkt-dot.closed { background:var(--text-muted); }
+
+/* Regime table */
+.regime-row {
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  gap: 6px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 11px;
+  align-items: center;
+}
+.regime-lbl   { color: var(--text-muted); font-size:10px; }
+.regime-val   { font-weight: 600; }
+.regime-right { color: var(--text-muted); font-size:10px; text-align:right; }
+.regime-header {
+  font-size: 9px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing:.1em;
+  padding: 10px 0 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 2px;
+}
+
+/* Engine grid */
+.engine-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-md);
+  margin-bottom: var(--sp-md);
+}
+@media(max-width:700px){ .engine-grid{ grid-template-columns:1fr; } }
+
+/* Trade card */
+.trade-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-md);
+  transition: all .2s;
+}
+.trade-card-valid {
+  border-color: var(--pos);
+  box-shadow: 0 0 0 1px var(--pos)20, 0 4px 16px rgba(0,0,0,.3);
+  background: rgba(38,166,154,.04);
+}
+.tc-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: var(--sp-sm);
+  flex-wrap: wrap;
+}
+.tc-type      { font-size:16px; font-weight:800; }
+.tc-type-desc { font-size:11px; color:var(--text-muted); }
+.tc-signal    { font-size:11px; font-weight:700; margin-left:auto; }
+
+/* Confluence score bar */
+.tc-score-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: var(--sp-md);
+  padding: var(--sp-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+.tc-score-bar { display:flex; gap:4px; flex:1; }
+.score-dot {
+  flex:1; height:8px; border-radius:2px;
+  background: rgba(255,255,255,.08);
+  transition: background .3s;
+}
+.score-dot.filled { background: var(--pos); }
+
+/* Strikes */
+.tc-strikes {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.03);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-sm) var(--sp-md);
+  margin-bottom: var(--sp-sm);
+}
+.tcs-group  { text-align:center; }
+.tcs-role   { font-size:9px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); margin-bottom:4px; }
+.tcs-strike { font-size:28px; font-weight:800; color:var(--text-primary); line-height:1; }
+.tcs-delta  { font-size:10px; color:var(--text-muted); margin-top:2px; }
+.tcs-sep    { font-size:12px; color:var(--text-muted); padding:0 4px; }
+
+/* Metrics */
+.tc-metrics {
+  display: grid; grid-template-columns: repeat(6,1fr);
+  gap: 4px; margin-bottom: var(--sp-sm);
+}
+@media(max-width:600px){ .tc-metrics{ grid-template-columns: repeat(3,1fr); } }
+.tcm     { text-align:center; padding:6px 4px; background:rgba(255,255,255,.02); border-radius:4px; }
+.tcm-l   { font-size:8px; color:var(--text-muted); text-transform:uppercase; margin-bottom:3px; }
+.tcm-v   { font-size:13px; font-weight:600; }
+
+/* Sizing */
+.tc-sizing {
+  font-size:11px; color:var(--text-secondary);
+  padding: var(--sp-sm) 0;
+  border-top: 1px solid var(--border);
+}
+
+/* Confluence table */
+.confluence-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: var(--sp-md);
+}
+@media(max-width:700px){ .confluence-grid{ grid-template-columns:1fr; } }
+
+.conf-table {
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-md);
+}
+.conf-title { font-size:11px; font-weight:700; color:var(--text-secondary); margin-bottom:8px; }
+.conf-row {
+  display: grid;
+  grid-template-columns: 16px 110px 60px 1fr;
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  font-size: 10px;
+  align-items: center;
+}
+.conf-dot  { font-size:12px; font-weight:700; text-align:center; }
+.conf-name { color:var(--text-muted); }
+.conf-val  { color:var(--text-primary); font-weight:600; text-align:right; }
+.conf-note { color:var(--text-muted); font-size:9px; }
+
+/* Params */
+.params-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: var(--sp-sm);
+}
+.param-group { display:flex; flex-direction:column; gap:4px; }
+.param-label { font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; }
+
+.loading-msg {
+  padding: var(--sp-xl);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ── Sticky price bar on SPX tab ─────────────────────────────────────────── */
+#pane-spx .price-cards-grid {
+  position: sticky;
+  top: 52px;           /* below topbar height */
+  z-index: 50;
+  background: var(--bg);
+  padding: var(--sp-sm) 0;
+  border-bottom: 1px solid var(--border2);
+  margin-bottom: var(--sp-sm);
+}

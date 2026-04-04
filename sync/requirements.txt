@@ -1,0 +1,3 @@
+tigeropen
+pandas
+python-dotenv

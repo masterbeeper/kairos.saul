@@ -1,0 +1,42 @@
+# Kairos .gitignore
+
+# Secrets — NEVER commit these
+.env
+*.pem
+*.key
+*service_account*.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+venv/
+.venv/
+*.egg-info/
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Logs
+logs/
+*.log
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# data.json is committed intentionally (it's the dashboard data)
+# Uncomment below only if you want to exclude it:
+# data.json
+
+# test work 
+tmp/
+sync/leg_cache.json
+data.backup.json
+logs/
+sync/leg_cache.json
+data.backup.json
+logs/

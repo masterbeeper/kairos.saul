@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Kairos — Trading Journal</title>
+  <meta name="description" content="Personal options trading journal">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/variables.css?v=20260401091948">
+  <link rel="stylesheet" href="assets/css/base.css?v=20260401091948">
+  <link rel="stylesheet" href="assets/css/layout.css?v=20260401091948">
+  <link rel="stylesheet" href="assets/css/components.css?v=20260401091948">
+
+  <!-- Chart.js -->
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- TradingView -->
+  <script src="https://s3.tradingview.com/tv.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════ LOGIN ══ -->
+<div id="login-screen">
+  <div class="lcard anim-up">
+
+    <div class="llogo">KAIROS</div>
+    <div class="lsub">TRADING JOURNAL</div>
+
+    <!-- Google Sign-In button rendered here by auth.js -->
+    <div id="g-signin-btn"></div>
+
+    <div id="lerr" class="lerr"></div>
+
+    <div class="lfoot">
+      🔒 Private · Restricted access only<br>
+      <b>No data leaves your browser</b>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ APP ════ -->
+<div id="app">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div>
+      <div class="tb-brand">KAIROS</div>
+      <div class="tb-sync" id="tb-sync">Not synced</div>
+    </div>
+    <div class="tb-right">
+      <button class="btn-theme" id="btn-privacy" onclick="App.togglePrivacy()" title="Hide P&L for screenshot" style="margin-right:4px">👁</button>
+      <button class="btn-theme" id="btn-theme" onclick="App.toggleTheme()" title="Toggle theme">☀️</button>
+      <button class="btn btn-primary" id="btn-sync" onclick="App.sync()">⟳ Sync</button>
+      <button class="btn btn-outline btn-danger" onclick="Auth.logout()">Sign out</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" data-tab="overview">Overview</div>
+    <div class="tab" data-tab="tiger">🐯 Tiger</div>
+    <div class="tab" data-tab="webull">📗 Webull</div>
+    <div class="tab" data-tab="moomoo">🟠 MooMoo</div>
+    <div class="tab" data-tab="journal">📋 Journal</div>
+  </div>
+
+  <!-- ── OVERVIEW ── -->
+  <div class="tab-pane active" id="pane-overview">
+    <div class="content">
+
+      <!-- Summary cards -->
+      <div class="grid-4 mb-md" id="ov-cards"></div>
+
+      <!-- Broker cards -->
+      <div class="grid-3 mb-md" id="ov-brokers"></div>
+
+      <!-- Strategy breakdown -->
+      <div class="section" style="margin-top:var(--sp-md)">
+        <div class="sec-hdr">
+          <div class="sec-title">Strategy performance</div>
+          <div style="font-size:10px;color:var(--text-muted)">bt = backtest win rate</div>
+        </div>
+        <div class="panel" style="padding:var(--sp-md)">
+          <div id="ov-strategy-breakdown"></div>
+        </div>
+      </div>
+
+      <!-- Backtest findings -->
+      <div id="ov-backtest"></div>
+
+      <!-- Date filter -->
+      <div id="ov-date-filter"></div>
+
+      <!-- Charts row -->
+      <div class="grid-2 mb-md">
+        <div class="chart-wrap">
+          <div class="chart-title">Cumulative P&L</div>
+          <div class="chart-legend" id="cum-legend"></div>
+          <canvas id="chart-cum" height="150"></canvas>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">Daily P&L</div>
+          <canvas id="chart-daily" height="150"></canvas>
+        </div>
+      </div>
+
+      <!-- Open Positions -->
+      <div class="section">
+        <div class="sec-hdr">
+          <div class="sec-title">📂 Open Positions</div>
+          <div class="sec-badge" id="ov-pos-badge">0</div>
+        </div>
+        <div class="panel">
+          <div class="tsc">
+            <table class="tbl">
+              <thead><tr>
+                <th>Broker</th><th>Strategy</th><th>Symbol</th>
+                <th>Expiry / DTE</th><th>Strikes</th>
+                <th class="num">Credit</th>
+                <th class="num">Max P</th>
+                <th class="num">Max L</th>
+                <th class="num">uPnL</th>
+              </tr></thead>
+              <tbody id="ov-pos-body">
+                <tr><td colspan="9">
+                  <div class="empty"><span class="empty-icon">📭</span>No data loaded</div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /overview -->
+
+  <!-- ── TIGER ── -->
+  <div class="tab-pane" id="pane-tiger">
+    <div class="content" id="pane-tiger">
+      <div class="empty" style="margin-top:var(--sp-xl)">
+        <span class="empty-icon">🐯</span>Load data to view Tiger trades
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WEBULL ── -->
+  <div class="tab-pane" id="pane-webull">
+    <div class="content">
+      <div class="empty" style="margin-top:var(--sp-xl)">
+        <span class="empty-icon">📗</span>Webull not connected yet
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MOOMOO ── -->
+  <div class="tab-pane" id="pane-moomoo">
+    <div class="content">
+      <div class="empty" style="margin-top:var(--sp-xl)">
+        <span class="empty-icon">🟠</span>MooMoo not connected yet
+      </div>
+    </div>
+  </div>
+
+  <!-- ── JOURNAL ── -->
+  <div class="tab-pane" id="pane-journal">
+    <div class="content">
+      <div class="sec-hdr" style="margin-top:var(--sp-md)">
+        <div class="sec-title">📋 Trade Journal</div>
+        <div class="sec-badge" id="journal-badge">0 trades</div>
+      </div>
+      <div class="filter-row" id="journal-filters"></div>
+      <div class="panel">
+        <div class="tsc">
+          <table class="tbl">
+            <thead><tr>
+              <th>Date</th><th>Broker</th><th>Strategy</th>
+              <th>Symbol</th><th>Contract</th>
+              <th class="num">DTE</th>
+              <th class="num">P&L</th><th>W/L</th>
+            </tr></thead>
+            <tbody id="journal-body">
+              <tr><td colspan="8">
+                <div class="empty"><span class="empty-icon">📭</span>No data loaded</div>
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="pane-backtest"></div>
+
+</div><!-- /app -->
+
+<!-- JS — load order matters -->
+<script src="assets/js/config.js?v=20260401091948"></script>
+<script src="assets/js/auth.js?v=20260401091948"></script>
+<script src="assets/js/data.js?v=20260401091948"></script>
+<script src="assets/js/components.js?v=20260401091948"></script>
+<script src="assets/js/charts.js?v=20260401091948"></script>
+<script src="assets/js/overview.js?v=20260401091948"></script>
+<script src="assets/js/broker.js?v=20260401091948"></script>
+<script src="assets/js/journal.js?v=20260401091948"></script>
+
+<script src="assets/js/app.js?v=20260401091948"></script>
+
+</body>
+</html>

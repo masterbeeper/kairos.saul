@@ -1,0 +1,140 @@
+/* assets/css/base.css */
+
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html { font-size: 13px; -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background var(--t-base), color var(--t-base);
+}
+
+a { color: var(--brand-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
+
+/* Utilities */
+.pos   { color: var(--pos)        !important; }
+.neg   { color: var(--neg)        !important; }
+.neu   { color: var(--neu)        !important; }
+.muted { color: var(--text-muted) !important; }
+.num   { text-align: right !important; font-variant-numeric: tabular-nums; }
+.tsc   { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px) scale(0.97); }
+  to   { opacity:1; transform:none; }
+}
+@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+@keyframes shake   { 0%,100%{transform:none} 20%,60%{transform:translateX(-4px)} 40%,80%{transform:translateX(4px)} }
+@keyframes spin    { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+@keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.anim-up    { animation: fadeUp 0.4s cubic-bezier(0.16,1,0.3,1) both; }
+.anim-in    { animation: fadeIn var(--t-slow) both; }
+.anim-shake { animation: shake 0.35s ease; }
+.anim-spin  { animation: spin 0.8s linear infinite; }
+.anim-pulse { animation: pulse 1.5s ease infinite; }
+
+/* Empty state */
+.empty { text-align:center; padding:var(--sp-2xl); color:var(--text-muted); font-size:11px; line-height:2; }
+.empty-icon { font-size:28px; display:block; margin-bottom:var(--sp-sm); }
+
+/* ── Skeleton loader ── */
+.skel {
+  background: linear-gradient(90deg,
+    var(--panel2) 25%, var(--border2) 50%, var(--panel2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 4px;
+  display: block;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Topbar sync error */
+.tb-sync-err { color: var(--neg) !important; }
+
+/* Code inline */
+code {
+  font-family: var(--font-mono);
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 10px;
+}
+
+/* ── Privacy mode — replace P&L with *** ────────────────────────────────── */
+/* Triggered by body.privacy-mode — toggle with 👁 button in topbar         */
+
+body.privacy-mode .pos,
+body.privacy-mode .neg,
+body.privacy-mode [class*="pnl"],
+body.privacy-mode .card-val,
+body.privacy-mode .pnl-hide {
+  color: transparent !important;
+  position: relative;
+  user-select: none;
+}
+
+body.privacy-mode .pos::after,
+body.privacy-mode .neg::after,
+body.privacy-mode [class*="pnl"]::after,
+body.privacy-mode .card-val::after,
+body.privacy-mode .pnl-hide::after {
+  content: "***";
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--color-text-secondary, #8b949e);
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: 0.1em;
+}
+
+/* Tables — num cells */
+body.privacy-mode td.num,
+body.privacy-mode .num {
+  color: transparent !important;
+  position: relative;
+  user-select: none;
+}
+body.privacy-mode td.num::after,
+body.privacy-mode .num::after {
+  content: "***";
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--color-text-secondary, #8b949e);
+  font-size: inherit;
+  letter-spacing: 0.1em;
+}
+
+/* Keep non-financial text visible */
+body.privacy-mode .tag,
+body.privacy-mode .badge,
+body.privacy-mode .filter-btn {
+  color: unset !important;
+  background: unset !important;
+}
+body.privacy-mode .tag::after,
+body.privacy-mode .badge::after,
+body.privacy-mode .filter-btn::after {
+  content: none !important;
+}

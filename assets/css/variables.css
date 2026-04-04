@@ -1,0 +1,82 @@
+/* assets/css/variables.css */
+
+:root {
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+  --font-display: 'Syne', system-ui, sans-serif;
+
+  /* Brand */
+  --brand-green:  #66bb6a;
+  --brand-blue:   #4fc3f7;
+  --brand-orange: #ff9800;
+  --brand-purple: #ce93d8;
+  --brand-red:    #ef5350;
+  --brand-gold:   #ffd54f;
+
+  /* Strategy */
+  --color-ic:    #66bb6a;
+  --color-bps:   #4fc3f7;
+  --color-bcs:   #ff9800;
+  --color-stock: #ce93d8;
+
+  /* Brokers */
+  --color-tiger:  #ff6b35;
+  --color-webull: #00d4aa;
+  --color-moomoo: #ff4b6e;
+
+  /* Spacing */
+  --sp-xs:  4px;  --sp-sm: 8px;  --sp-md: 12px;
+  --sp-lg: 16px;  --sp-xl: 24px; --sp-2xl: 32px;
+
+  /* Radius */
+  --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-xl: 16px;
+
+  /* Transitions */
+  --t-fast: 0.12s ease; --t-base: 0.2s ease; --t-slow: 0.35s ease;
+}
+
+/* ── DARK (default) ── */
+[data-theme="dark"], :root {
+  --bg:         #0d1117;
+  --bg-subtle:  #0a0e13;
+  --panel:      #161b22;
+  --panel2:     #1c2333;
+  --border:     #30363d;
+  --border2:    #21262d;
+  --text:       #e6edf3;
+  --text-muted: #8b949e;
+  --text-sub:   #6e7681;
+  --pos:        #66bb6a;
+  --neg:        #ef5350;
+  --neu:        #e6edf3;
+  --grid-line:  rgba(48,54,61,0.5);
+  --shadow:     0 8px 32px rgba(0,0,0,0.4);
+  --shadow-lg:  0 24px 64px rgba(0,0,0,0.6);
+  --scrollbar:  #30363d;
+}
+
+/* ── LIGHT ── */
+[data-theme="light"] {
+  --bg:         #f6f8fa;
+  --bg-subtle:  #eaeef2;
+  --panel:      #ffffff;
+  --panel2:     #f6f8fa;
+  --border:     #d0d7de;
+  --border2:    #e4e9ed;
+  --text:       #1f2328;
+  --text-muted: #656d76;
+  --text-sub:   #9198a1;
+  --pos:        #2da44e;
+  --neg:        #cf222e;
+  --neu:        #1f2328;
+  --grid-line:  rgba(208,215,222,0.6);
+  --shadow:     0 4px 16px rgba(31,35,40,0.1);
+  --shadow-lg:  0 12px 32px rgba(31,35,40,0.15);
+  --scrollbar:  #d0d7de;
+  --color-ic:    #2e7d32;
+  --color-bps:   #0277bd;
+  --color-bcs:   #e65100;
+  --color-stock: #6a1b9a;
+  --color-tiger:  #bf360c;
+  --color-webull: #00695c;
+  --color-moomoo: #ad1457;
+}

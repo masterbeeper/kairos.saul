@@ -12,7 +12,7 @@ const KAIROS_CONFIG = {
   // console.cloud.google.com → APIs & Services → Credentials → OAuth 2.0
   // Add your GitHub Pages URL to "Authorized JavaScript origins"
   // e.g. https://etherhtun.github.io
-  GOOGLE_CLIENT_ID: '750109214497-i6akdb52n1n4tv731v33rh08hpo8ofo2.apps.googleusercontent.com,
+  GOOGLE_CLIENT_ID: '750109214497-i6akdb52n1n4tv731v33rh08hpo8ofo2.apps.googleusercontent.com',
 
   // Only these Google accounts can access the dashboard
   // Add as many emails as you need

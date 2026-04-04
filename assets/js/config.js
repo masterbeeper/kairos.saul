@@ -17,7 +17,7 @@ const KAIROS_CONFIG = {
   // Only these Google accounts can access the dashboard
   // Add as many emails as you need
   ALLOWED_EMAILS: [
-    'rw.htun@gmail.com',
+    'zhaolibin87@gmail.com',
     // 'family@gmail.com',
   ],
 

@@ -59,7 +59,6 @@ const App = (() => {
         syncMsg.textContent = `⚠ ${e.message}`;
         syncMsg.className = 'tb-sync tb-sync-err';
       }
-      // Show error in overview panel
       const ov = document.getElementById('ov-cards');
       if (ov) ov.innerHTML = `
         <div style="grid-column:span 4">
@@ -86,6 +85,11 @@ const App = (() => {
   }
 
   function switchTab(name) {
+    // Destroy SPX timer if leaving SPX tab
+    if (_activeTab === 'spx' && name !== 'spx') {
+      if (typeof SPX !== 'undefined') SPX.destroy();
+    }
+
     _activeTab = name;
 
     document.querySelectorAll('.tab').forEach(el => {
@@ -107,6 +111,8 @@ const App = (() => {
       case 'webull':   BrokerTab.render('webull'); break;
       case 'moomoo':   BrokerTab.render('moomoo'); break;
       case 'journal':  Journal.render();           break;
+      case 'spx':      SPX.render();               break;
+      case 'ai':       AI.render();                break;
       case 'backtest':
         const btPane = document.getElementById('pane-backtest');
         if (btPane && !btPane.querySelector('iframe')) {
@@ -148,7 +154,6 @@ const App = (() => {
     const btn = document.getElementById('btn-theme');
     if (btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
 
-    // Re-render active tab to rebuild charts with new theme colors
     Charts.destroyAll();
     if (DataStore.get()) _renderTab(_activeTab);
   }

@@ -15,19 +15,147 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="assets/css/variables.css?v=20260401091948">
-  <link rel="stylesheet" href="assets/css/base.css?v=20260401091948">
-  <link rel="stylesheet" href="assets/css/layout.css?v=20260401091948">
-  <link rel="stylesheet" href="assets/css/components.css?v=20260401091948">
+  <link rel="stylesheet" href="assets/css/variables.css?v=20260405000000">
+  <link rel="stylesheet" href="assets/css/base.css?v=20260405000000">
+  <link rel="stylesheet" href="assets/css/layout.css?v=20260405000000">
+  <link rel="stylesheet" href="assets/css/components.css?v=20260405000000">
 
-  <!-- Chart.js -->
   <!-- Google Identity Services -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <!-- TradingView -->
   <script src="https://s3.tradingview.com/tv.js"></script>
 
+  <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+  <!-- AI module inline styles -->
+  <style>
+    /* ── AI tab styles ── */
+    .ai-module-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-md);
+      margin-top: var(--sp-md);
+    }
+    @media (max-width: 900px) { .ai-module-grid { grid-template-columns: 1fr; } }
+
+    .ai-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: var(--sp-md);
+    }
+    .ai-card-hdr {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .ai-card-icon  { font-size: 16px; }
+    .ai-card-title { font-size: 12px; font-weight: 700; color: var(--text); }
+    .ai-card-desc  { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+
+    .ai-btn    { width: 100%; margin-bottom: 6px; }
+    .ai-btn-sm { flex: 1; padding: 4px 8px; font-size: 11px; }
+    .ai-btn-sm.active { background: var(--brand-blue); color: #000; border-color: var(--brand-blue); }
+
+    .ai-output {
+      margin-top: 8px;
+      min-height: 0;
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--text);
+    }
+    .ai-response {
+      background: rgba(255,255,255,.03);
+      border-left: 2px solid var(--brand-blue);
+      padding: 10px 12px;
+      border-radius: 0 var(--r-sm) var(--r-sm) 0;
+      white-space: pre-wrap;
+    }
+    .ai-error {
+      color: var(--neg);
+      font-size: 11px;
+      padding: 8px;
+    }
+    .ai-cursor {
+      display: inline-block;
+      animation: blink .7s step-end infinite;
+      color: var(--brand-blue);
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .ai-thinking {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .ai-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--brand-blue);
+      margin-right: 4px;
+      animation: ai-pulse 1.2s ease-in-out infinite;
+    }
+    .ai-dot:nth-child(2) { animation-delay: .2s; }
+    .ai-dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes ai-pulse { 0%,80%,100% { opacity:.2; transform:scale(.8); } 40% { opacity:1; transform:scale(1); } }
+
+    /* Chat */
+    .ai-chat-wrap {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      margin-top: var(--sp-sm);
+    }
+    .ai-chat-output {
+      min-height: 200px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding: var(--sp-md);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .ai-chat-welcome {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      padding: var(--sp-xl) 0;
+    }
+    .ai-chat-bubble {
+      max-width: 85%;
+      padding: 8px 12px;
+      border-radius: var(--r-md);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    .ai-chat-bubble.user {
+      background: var(--brand-blue);
+      color: #000;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+    .ai-chat-bubble.bot {
+      background: var(--panel2);
+      color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+      border: 1px solid var(--border2);
+    }
+    .ai-chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 10px var(--sp-md);
+      border-top: 1px solid var(--border2);
+      background: var(--bg-subtle);
+    }
+    .ai-chat-input { flex: 1; }
+  </style>
 </head>
 <body>
 
@@ -74,6 +202,8 @@
     <div class="tab" data-tab="webull">📗 Webull</div>
     <div class="tab" data-tab="moomoo">🟠 MooMoo</div>
     <div class="tab" data-tab="journal">📋 Journal</div>
+    <div class="tab" data-tab="spx">📈 SPX</div>
+    <div class="tab" data-tab="ai">🤖 AI</div>
   </div>
 
   <!-- ── OVERVIEW ── -->
@@ -201,21 +331,41 @@
     </div>
   </div>
 
+  <!-- ── SPX ── -->
+  <div class="tab-pane" id="pane-spx">
+    <div class="content">
+      <div class="empty" style="margin-top:var(--sp-xl)">
+        <span class="empty-icon">📈</span>Click the SPX tab to load the options engine
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI ── -->
+  <div class="tab-pane" id="pane-ai">
+    <div class="content">
+      <div class="empty" style="margin-top:var(--sp-xl)">
+        <span class="empty-icon">🤖</span>Click the AI tab to load Kairos AI Analyst
+      </div>
+    </div>
+  </div>
+
   <div class="tab-pane" id="pane-backtest"></div>
 
 </div><!-- /app -->
 
 <!-- JS — load order matters -->
-<script src="assets/js/config.js?v=20260401091948"></script>
-<script src="assets/js/auth.js?v=20260401091948"></script>
-<script src="assets/js/data.js?v=20260401091948"></script>
-<script src="assets/js/components.js?v=20260401091948"></script>
-<script src="assets/js/charts.js?v=20260401091948"></script>
-<script src="assets/js/overview.js?v=20260401091948"></script>
-<script src="assets/js/broker.js?v=20260401091948"></script>
-<script src="assets/js/journal.js?v=20260401091948"></script>
+<script src="assets/js/config.js?v=20260405000000"></script>
+<script src="assets/js/auth.js?v=20260405000000"></script>
+<script src="assets/js/data.js?v=20260405000000"></script>
+<script src="assets/js/components.js?v=20260405000000"></script>
+<script src="assets/js/charts.js?v=20260405000000"></script>
+<script src="assets/js/overview.js?v=20260405000000"></script>
+<script src="assets/js/broker.js?v=20260405000000"></script>
+<script src="assets/js/journal.js?v=20260405000000"></script>
+<script src="assets/js/spx.js?v=20260405000000"></script>
+<script src="assets/js/ai.js?v=20260405000000"></script>
 
-<script src="assets/js/app.js?v=20260401091948"></script>
+<script src="assets/js/app.js?v=20260405000000"></script>
 
 </body>
 </html>

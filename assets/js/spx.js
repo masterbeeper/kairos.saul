@@ -263,20 +263,6 @@ const SPX = (() => {
 
       const t = _d.lastFetch.toLocaleTimeString();
       if (el) { el.textContent = `✓ Updated ${t} (15-min delay)`; el.className = 'fetch-status ok'; }
-
-      // Expose live data + scores to AI module
-      if (typeof AI !== 'undefined') {
-        const bullScore = _confluenceScore('BULL');
-        const bearScore = _confluenceScore('BEAR');
-        AI.setSpxData(_d, { bull: bullScore, bear: bearScore });
-        // Also expose current strike state for trade plan generation
-        window._kairosSpxState = {
-          dte:     _d.dte,
-          strikes: `BPS ${_atrStrikes('BPS')?.short}/${_atrStrikes('BPS')?.long} · BCS ${_atrStrikes('BCS')?.short}/${_atrStrikes('BCS')?.long}`,
-          metrics: _strikeMetrics(_atrStrikes('BPS'), 'BPS'),
-        };
-      }
-
       _renderAll();
     } catch(e) {
       _d.fetchErr = e.message;
@@ -821,6 +807,6 @@ const SPX = (() => {
     _renderEngine();
   }
 
-  return { render, recalc, update, destroy, toggleGeoRisk, getState: () => _d };
+  return { render, recalc, update, destroy, toggleGeoRisk };
 
 })();

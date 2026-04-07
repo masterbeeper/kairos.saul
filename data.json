@@ -1,9 +1,9 @@
 {
   "meta": {
-    "last_sync": "2026-04-04T23:50:47.577749",
+    "last_sync": "2026-04-08T01:21:20.678936",
     "start_date": "2026-01-27",
-    "end_date": "2026-04-04",
-    "total_trades": 76,
+    "end_date": "2026-04-08",
+    "total_trades": 77,
     "brokers": [
       "tiger"
     ],
@@ -18,7 +18,22 @@
       "currency": "USD"
     }
   ],
-  "open_positions": [],
+  "open_positions": [
+    {
+      "broker": "tiger",
+      "strategy": "bcs",
+      "symbol": "SPXW",
+      "expiry": "2026-04-16",
+      "legs": 2,
+      "strikes": "C 6750/6760",
+      "entry_credit": 8607.51,
+      "max_profit": 8607.51,
+      "max_loss": 0,
+      "unrealized_pnl": -4.74,
+      "realized_pnl": 0.0,
+      "market_value": -870.0
+    }
+  ],
   "daily_pnl": [
     {
       "date": "2026-01-27",
@@ -41,8 +56,8 @@
     },
     {
       "date": "2026-02-03",
-      "tiger_iron_condor": 94.86,
-      "tiger_bcs": 209.96
+      "tiger_bcs": 209.96,
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-04",
@@ -60,13 +75,13 @@
     },
     {
       "date": "2026-02-09",
-      "tiger_bps": 84.96,
-      "tiger_bcs": 194.92
+      "tiger_bcs": 194.92,
+      "tiger_bps": 84.96
     },
     {
       "date": "2026-02-11",
-      "tiger_bps": 454.91,
-      "tiger_bcs": 134.96
+      "tiger_bcs": 134.96,
+      "tiger_bps": 454.91
     },
     {
       "date": "2026-02-12",
@@ -92,8 +107,8 @@
     },
     {
       "date": "2026-02-23",
-      "tiger_bps": 563.98,
-      "tiger_bcs": 819.98
+      "tiger_bcs": 819.98,
+      "tiger_bps": 563.98
     },
     {
       "date": "2026-02-24",
@@ -158,224 +173,233 @@
     {
       "date": "2026-04-02",
       "tiger_iron_condor": 203.96
+    },
+    {
+      "date": "2026-04-08"
     }
   ],
   "cumulative_pnl": [
     {
       "date": "2026-01-27",
-      "tiger_iron_condor": 0.0,
+      "tiger_bcs": -13.02,
       "tiger_bps": 0.0,
-      "tiger_bcs": -13.02
+      "tiger_iron_condor": 0.0
     },
     {
       "date": "2026-01-28",
-      "tiger_iron_condor": 0.0,
+      "tiger_bcs": -13.02,
       "tiger_bps": 219.96,
-      "tiger_bcs": -13.02
+      "tiger_iron_condor": 0.0
     },
     {
       "date": "2026-01-29",
-      "tiger_iron_condor": 0.0,
+      "tiger_bcs": 274.96,
       "tiger_bps": 219.96,
-      "tiger_bcs": 274.96
+      "tiger_iron_condor": 0.0
     },
     {
       "date": "2026-01-30",
-      "tiger_iron_condor": 0.0,
+      "tiger_bcs": 274.96,
       "tiger_bps": 333.95,
-      "tiger_bcs": 274.96
+      "tiger_iron_condor": 0.0
     },
     {
       "date": "2026-02-02",
-      "tiger_iron_condor": 0.0,
+      "tiger_bcs": 274.96,
       "tiger_bps": 333.95,
-      "tiger_bcs": 274.96
+      "tiger_iron_condor": 0.0
     },
     {
       "date": "2026-02-03",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 484.92,
       "tiger_bps": 333.95,
-      "tiger_bcs": 484.92
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-04",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 484.92,
       "tiger_bps": 428.84,
-      "tiger_bcs": 484.92
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-05",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 484.92,
       "tiger_bps": 613.83,
-      "tiger_bcs": 484.92
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-06",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 484.92,
       "tiger_bps": 613.83,
-      "tiger_bcs": 484.92
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-07",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 484.92,
       "tiger_bps": 613.83,
-      "tiger_bcs": 484.92
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-09",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 679.84,
       "tiger_bps": 698.79,
-      "tiger_bcs": 679.84
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-11",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 814.8,
       "tiger_bps": 1153.7,
-      "tiger_bcs": 814.8
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-12",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 888.82,
       "tiger_bps": 1153.7,
-      "tiger_bcs": 888.82
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-13",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 888.82,
       "tiger_bps": -1066.45,
-      "tiger_bcs": 888.82
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-14",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 888.82,
       "tiger_bps": -981.49,
-      "tiger_bcs": 888.82
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-18",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 888.82,
       "tiger_bps": -1511.51,
-      "tiger_bcs": 888.82
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-19",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 888.82,
       "tiger_bps": -1511.51,
-      "tiger_bcs": 888.82
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-20",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 888.82,
       "tiger_bps": -1511.51,
-      "tiger_bcs": 888.82
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-23",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 1708.8,
       "tiger_bps": -947.53,
-      "tiger_bcs": 1708.8
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-24",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 1708.8,
       "tiger_bps": -731.59,
-      "tiger_bcs": 1708.8
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-25",
-      "tiger_iron_condor": 94.86,
+      "tiger_bcs": 1708.8,
       "tiger_bps": -11.67,
-      "tiger_bcs": 1708.8
+      "tiger_iron_condor": 94.86
     },
     {
       "date": "2026-02-27",
-      "tiger_iron_condor": 106.82,
+      "tiger_bcs": 1708.8,
       "tiger_bps": -11.67,
-      "tiger_bcs": 1708.8
+      "tiger_iron_condor": 106.82
     },
     {
       "date": "2026-03-02",
-      "tiger_iron_condor": 106.82,
+      "tiger_bcs": 1708.8,
       "tiger_bps": 158.31,
-      "tiger_bcs": 1708.8
+      "tiger_iron_condor": 106.82
     },
     {
       "date": "2026-03-03",
-      "tiger_iron_condor": 106.82,
+      "tiger_bcs": 4053.24,
       "tiger_bps": 158.31,
-      "tiger_bcs": 4053.24
+      "tiger_iron_condor": 106.82
     },
     {
       "date": "2026-03-04",
-      "tiger_iron_condor": 106.82,
+      "tiger_bcs": 4053.24,
       "tiger_bps": 158.31,
-      "tiger_bcs": 4053.24
+      "tiger_iron_condor": 106.82
     },
     {
       "date": "2026-03-05",
-      "tiger_iron_condor": 106.82,
+      "tiger_bcs": 5321.22,
       "tiger_bps": 158.31,
-      "tiger_bcs": 5321.22
+      "tiger_iron_condor": 106.82
     },
     {
       "date": "2026-03-10",
-      "tiger_iron_condor": 135.78,
+      "tiger_bcs": 5321.22,
       "tiger_bps": 158.31,
-      "tiger_bcs": 5321.22
+      "tiger_iron_condor": 135.78
     },
     {
       "date": "2026-03-12",
-      "tiger_iron_condor": 135.78,
+      "tiger_bcs": 5321.22,
       "tiger_bps": 158.31,
-      "tiger_bcs": 5321.22
+      "tiger_iron_condor": 135.78
     },
     {
       "date": "2026-03-13",
-      "tiger_iron_condor": 135.78,
+      "tiger_bcs": 5321.22,
       "tiger_bps": 352.33,
-      "tiger_bcs": 5321.22
+      "tiger_iron_condor": 135.78
     },
     {
       "date": "2026-03-18",
-      "tiger_iron_condor": 135.78,
+      "tiger_bcs": 5321.22,
       "tiger_bps": 352.33,
-      "tiger_bcs": 5321.22
+      "tiger_iron_condor": 135.78
     },
     {
       "date": "2026-03-23",
-      "tiger_iron_condor": 135.78,
+      "tiger_bcs": 5321.22,
       "tiger_bps": 488.29,
-      "tiger_bcs": 5321.22
+      "tiger_iron_condor": 135.78
     },
     {
       "date": "2026-03-25",
-      "tiger_iron_condor": 203.76,
+      "tiger_bcs": 5321.22,
       "tiger_bps": 488.29,
-      "tiger_bcs": 5321.22
+      "tiger_iron_condor": 203.76
     },
     {
       "date": "2026-03-26",
-      "tiger_iron_condor": 203.76,
+      "tiger_bcs": 5465.24,
       "tiger_bps": 488.29,
-      "tiger_bcs": 5465.24
+      "tiger_iron_condor": 203.76
     },
     {
       "date": "2026-03-31",
-      "tiger_iron_condor": 203.76,
+      "tiger_bcs": 5465.24,
       "tiger_bps": 889.29,
-      "tiger_bcs": 5465.24
+      "tiger_iron_condor": 203.76
     },
     {
       "date": "2026-04-01",
-      "tiger_iron_condor": 203.76,
+      "tiger_bcs": 5465.24,
       "tiger_bps": 889.29,
-      "tiger_bcs": 5465.24
+      "tiger_iron_condor": 203.76
     },
     {
       "date": "2026-04-02",
-      "tiger_iron_condor": 407.72,
+      "tiger_bcs": 5465.24,
       "tiger_bps": 889.29,
-      "tiger_bcs": 5465.24
+      "tiger_iron_condor": 407.72
+    },
+    {
+      "date": "2026-04-08",
+      "tiger_bcs": 5465.24,
+      "tiger_bps": 889.29,
+      "tiger_iron_condor": 407.72
     }
   ],
   "stats": [
@@ -1620,6 +1644,22 @@
       "option_type": "P",
       "strike": 6300.0,
       "expiry": "2026-04-07"
+    },
+    {
+      "broker": "tiger",
+      "trade_id": "42818828600348672",
+      "date": "2026-04-08",
+      "symbol": "SPXW",
+      "contract": "C 6750/6760",
+      "asset_type": "OPT",
+      "action": "BUY",
+      "quantity": 3.0,
+      "avg_price": -2.9,
+      "realized_pnl": 0.0,
+      "strategy": "bcs",
+      "option_type": "C",
+      "strike": 6750.0,
+      "expiry": "2026-04-16"
     }
   ]
 }

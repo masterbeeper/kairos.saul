@@ -304,7 +304,7 @@ const Overview = (() => {
     if (badge) badge.textContent = positions.length + ' position'+(positions.length!==1?'s':'');
 
     if (!positions.length) {
-      tbody.innerHTML = Components.emptyRow(9, 'No open positions right now', '✅');
+      tbody.innerHTML = Components.emptyRow(10, 'No open positions right now', '✅');
       return;
     }
     tbody.innerHTML = positions.map(Components.positionRow).join('');

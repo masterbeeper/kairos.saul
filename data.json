@@ -1,9 +1,9 @@
 {
   "meta": {
-    "last_sync": "2026-04-22T21:25:00.118230",
+    "last_sync": "2026-04-23T08:00:37.558003",
     "start_date": "2026-01-27",
-    "end_date": "2026-04-22",
-    "total_trades": 85,
+    "end_date": "2026-04-23",
+    "total_trades": 86,
     "brokers": [
       "tiger"
     ],
@@ -18,22 +18,7 @@
       "currency": "USD"
     }
   ],
-  "open_positions": [
-    {
-      "broker": "tiger",
-      "strategy": "iron_condor",
-      "symbol": "SPXW",
-      "expiry": "2026-04-22",
-      "legs": 4,
-      "strikes": "P 7040/7045  C 7120/7125",
-      "entry_credit": 6858.84,
-      "max_profit": 6858.84,
-      "max_loss": -6358.84,
-      "unrealized_pnl": 73.86,
-      "realized_pnl": 0.0,
-      "market_value": -500.0
-    }
-  ],
+  "open_positions": [],
   "daily_pnl": [
     {
       "date": "2026-01-27",
@@ -196,7 +181,8 @@
       "tiger_bcs": 408.41
     },
     {
-      "date": "2026-04-22"
+      "date": "2026-04-22",
+      "tiger_iron_condor": 167.84
     }
   ],
   "cumulative_pnl": [
@@ -455,7 +441,7 @@
     {
       "date": "2026-04-22",
       "tiger_bps": 889.29,
-      "tiger_iron_condor": 407.72,
+      "tiger_iron_condor": 575.56,
       "tiger_bcs": 6099.28
     }
   ],
@@ -479,10 +465,10 @@
     {
       "broker": "tiger",
       "strategy": "iron_condor",
-      "total_trades": 5,
+      "total_trades": 6,
       "win_rate_pct": 100.0,
-      "total_pnl": 407.72,
-      "avg_pnl": 81.54
+      "total_pnl": 575.56,
+      "avg_pnl": 95.93
     }
   ],
   "trades": [
@@ -1844,6 +1830,22 @@
       "strategy": "iron_condor",
       "option_type": "P",
       "strike": 7045.0,
+      "expiry": "2026-04-22"
+    },
+    {
+      "broker": "tiger",
+      "trade_id": "42987917936692224",
+      "date": "2026-04-22",
+      "symbol": "SPXW",
+      "contract": "P 7040/7045  C 7120/7125",
+      "asset_type": "OPT",
+      "action": "BUY",
+      "quantity": 2.0,
+      "avg_price": 2.0,
+      "realized_pnl": 167.84,
+      "strategy": "iron_condor",
+      "option_type": "P",
+      "strike": 7040.0,
       "expiry": "2026-04-22"
     }
   ]
